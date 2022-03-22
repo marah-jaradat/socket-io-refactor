@@ -2,7 +2,7 @@
 
 require("dotenv").config();
 const { faker } = require("@faker-js/faker");
-const PORT = process.env.PORT || 3003;
+const PORT = process.env.PORT || 3001;
 const io = require("socket.io-client");
 const host = `http://localhost:${PORT}/vendor`;
 const hubConnection = io.connect(host);
@@ -12,23 +12,17 @@ const hubConnection = io.connect(host);
 //     console.log("vendor is here")
 // })
 
-const createOrder = () => {
-  let order = {
-    store: "1-206-flowers",
-    orderId: faker.random.uuid(),
+setInterval(() => {
+  let ordername = {
+    store: "store name",
+    orderId: faker.datatype.uuid(),
     customer: `${faker.name.firstName()} ${faker.name.lastName()}`,
     address: `${faker.address.city()}, ${faker.address.stateAbbr()}`,
   };
-  let statusOrder = `(===New Order===)`;
 
-  hubConnection.emit("hub_Pickup", order);
-  hubConnection.emit("print_stauts_order", statusOrder);
-  hubConnection.emit("print_stauts_order", order);
-};
+  hubConnection.emit("pickup", ordername);
+}, 5000);
 
-const notification = (payload) => {
-  console.log(`vendor :Thank you for delivering ${payload.orderId}`);
-};
-//listner
-hubConnection.on("createOrder", createOrder);
-hubConnection.on("notification", notification);
+hubConnection.on("delivered", (ordername) => {
+  console.log(`vendor :Thank you for delivering ${ordername.orderId}`);
+});

@@ -13,16 +13,33 @@ io.on("connection", (socket) => {
     io.emit("newOrder");
   });
 
-  socket.on("pickup", (payload) => {
-    io.emit("pickup", payload);
-  });
+  socket.on("pickup", (storeName) => {
+    let obj = {
+      event: "pickup",
+      time: new Date().toString(),
+      payload: storeName,
+    };
 
-  socket.on("inTransit", (payload) => {
-    io.emit("inTransit", payload);
+    console.log("EVENT", obj);
+    io.emit("pickup", storeName);
   });
+  socket.on("in-transit", (storeName) => {
+    let obj = {
+      event: "in-transit",
+      time: new Date().toString(),
+      payload: storeName,
+    };
+    console.log("EVENT", obj);
+  });
+  socket.on("delivered", (storeName) => {
+    let obj = {
+      event: "delivered",
+      time: new Date().toString(),
+      payload: storeName,
+    };
 
-  socket.on("delivered", (payload) => {
-    io.emit("delivered", payload);
+    console.log("EVENT", obj);
+    io.emit("delivered", storeName);
   });
 });
 
