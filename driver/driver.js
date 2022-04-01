@@ -1,20 +1,20 @@
 "use strict";
 
 require("dotenv").config();
+const socket = require("socket.io-client");
 const PORT = process.env.PORT || 3001;
 const host = `http://localhost:${PORT}`;
 
-const io = require("socket.io-client");
-const hubConnection = io.connect(host);
+const hubConnection = socket.connect(host);
 
-hubConnection.on("pickup", (payload) => {
-  console.log(`DRIVER : picked up ${payload.orderID} `);
+hubConnection.on("pickup", (storeName) => {
+  console.log(`DRIVER : picked up ${storeName.orderID} `);
   setTimeout(() => {
-    capsConnection.emit("in-transit", payload);
+    hubConnection.emit("in-transit", storeName);
     console.log("DRIVER : in-transit");
   }, 2000);
   setTimeout(() => {
-    capsConnection.emit("delivered", payload);
-    console.log(`DRIVER : delivered up ${payload.orderID}`);
+    hubConnection.emit("delivered", storeName);
+    console.log(`DRIVER : delivered up ${storeName.orderID}`);
   }, 3000);
 });
