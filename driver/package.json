@@ -2,6 +2,20 @@
   "dependencies": {
     "@faker-js/faker": "^6.0.0",
     "dotenv": "^16.0.0",
-    "socket.io-client": "^4.4.1"
-  }
+    "faker": "^6.6.6",
+    "socket.io-client": "^4.4.1",
+    "uuid": "^8.3.2"
+  },
+  "name": "driver",
+  "version": "1.0.0",
+  "main": "driver.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "jest --coverage --verbose",
+    "start": "node driver.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }

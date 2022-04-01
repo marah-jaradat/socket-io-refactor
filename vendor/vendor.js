@@ -1,13 +1,22 @@
 "use strict";
 
-require("dotenv").config();
-const { faker } = require("@faker-js/faker");
+const socket = require("socket.io-client");
 const PORT = process.env.PORT || 3001;
-const io = require("socket.io-client");
-const host = `http://localhost:${PORT}/vendor`;
-const hubConnection = io.connect(host);
-// const vend = io.connect(host);
+const host = `http://localhost:${PORT}`;
+const { faker } = require("@faker-js/faker");
 
-// vend.on("vendor", (payload) => {
-//     console.log("vendor is here")
-// })
+const hubConnection = socket.connect(host);
+
+setInterval(() => {
+  let storeName = {
+    store: "my store",
+    orderID: faker.datatype.uuid(),
+    customer: faker.name.findName(),
+    address: `${faker.address.city()}, ${faker.address.stateAbbr()}`,
+  };
+  hubConnection.emit("pickup", storeName);
+}, 5000);
+
+hubConnection.on("delivered", (storeName) => {
+  console.log(`VENDOR : Thank you for delivering ${storeName.orderID}`);
+});
